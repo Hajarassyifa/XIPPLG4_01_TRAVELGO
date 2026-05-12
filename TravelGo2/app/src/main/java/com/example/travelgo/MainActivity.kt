@@ -1,11 +1,12 @@
 package com.example.travelgo
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 
@@ -24,20 +25,20 @@ class MainActivity : AppCompatActivity() {
         rvDestinasi = findViewById(R.id.rvDestinasi)
         bannerViewPager = findViewById(R.id.bannerViewPager)
 
-        // 2. Setup UI (Isi teks & ikon kategori)
-        setupCategoryButtons()
-
-        // 3. Setup Banner Slider
+        // 2. Setup Banner & Data
         setupBanner()
-
-        // 4. Ambil data Dummy & Tampilkan
         prepareData()
+
+        // Tampilan Rekomendasi di bawah banner (List Vertikal)
         showRecyclerView(listWisata)
+
+        // 3. Setup Kategori & Navigasi
+        setupCategoryButtons()
     }
 
     private fun setupBanner() {
         val images = listOf(
-            R.drawable.img_onboarding1, // Pastikan ini gambar Bali kamu
+            R.drawable.img_onboarding1,
             R.drawable.img_onboarding2,
             R.drawable.img_onboarding3
         )
@@ -45,42 +46,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupCategoryButtons() {
-        // --- 1. KATEGORI SEMUA ---
-        val catAll = findViewById<LinearLayout>(R.id.catAll)
-        catAll.findViewById<TextView>(R.id.tvCategoryName).text = "Semua"
-        catAll.findViewById<ImageView>(R.id.imgCategory).setImageResource(R.drawable.ic_all) // Ganti ic_all jika ada
-        catAll.setOnClickListener { filterData("Semua") }
+        // Fungsi helper untuk kategori
+        fun initCategory(id: Int, name: String, iconRes: Int, categoryFilter: String) {
+            val layout = findViewById<LinearLayout>(id)
+            layout?.let {
+                it.findViewById<TextView>(R.id.tvCategoryName).text = name
+                it.findViewById<ImageView>(R.id.imgCategory).setImageResource(iconRes)
 
-        // --- 2. KATEGORI PANTAI ---
-        val catBeach = findViewById<LinearLayout>(R.id.catBeach)
-        catBeach.findViewById<TextView>(R.id.tvCategoryName).text = "Pantai"
-        catBeach.findViewById<ImageView>(R.id.imgCategory).setImageResource(R.drawable.ic_beach)
-        catBeach.setOnClickListener { filterData("Pantai") }
+                it.setOnClickListener {
+                    if (categoryFilter == "Semua") {
+                        // Jika klik 'Semua', pindah ke halaman SemuaDestinasi
+                        val intent = Intent(this, SemuaDestinasi::class.java)
+                        startActivity(intent)
+                    } else {
+                        // Jika klik kategori lain, filter di halaman ini saja
+                        filterData(categoryFilter)
+                    }
+                }
+            }
+        }
 
-        // --- 3. KATEGORI GUNUNG ---
-        val catMountain = findViewById<LinearLayout>(R.id.catMountain)
-        catMountain.findViewById<TextView>(R.id.tvCategoryName).text = "Gunung"
-        catMountain.findViewById<ImageView>(R.id.imgCategory).setImageResource(R.drawable.ic_mountain)
-        catMountain.setOnClickListener { filterData("Gunung") }
-
-        // --- 4. KATEGORI SEJARAH ---
-        val catHistory = findViewById<LinearLayout>(R.id.catHistory)
-        catHistory.findViewById<TextView>(R.id.tvCategoryName).text = "Sejarah"
-        catHistory.findViewById<ImageView>(R.id.imgCategory).setImageResource(R.drawable.ic_history)
-        catHistory.setOnClickListener { filterData("Sejarah") }
-
-        // --- 5. KATEGORI KULINER ---
-        val catFood = findViewById<LinearLayout>(R.id.catFood)
-        catFood.findViewById<TextView>(R.id.tvCategoryName).text = "Kuliner"
-        catFood.findViewById<ImageView>(R.id.imgCategory).setImageResource(R.drawable.ic_culinary)
-        catFood.setOnClickListener { filterData("Kuliner") }
+        initCategory(R.id.catAll, "Semua", R.drawable.ic_all, "Semua")
+        initCategory(R.id.catBeach, "Pantai", R.drawable.ic_beach, "Pantai")
+        initCategory(R.id.catMountain, "Gunung", R.drawable.ic_mountain, "Gunung")
+        initCategory(R.id.catHistory, "Sejarah", R.drawable.ic_history, "Sejarah")
+        initCategory(R.id.catFood, "Kuliner", R.drawable.ic_culinary, "Kuliner")
     }
 
     private fun filterData(kategori: String) {
         val filteredList = if (kategori == "Semua") {
             listWisata
         } else {
-            // Perbaikan logika filter agar tidak crash
             val temp = listWisata.filter { it.kategori == kategori }
             ArrayList(temp)
         }
@@ -89,14 +85,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun prepareData() {
         listWisata.clear()
-        listWisata.add(Destinasi(1, "Gunung Bromo", "Jawa Timur", "Deskripsi...", "Rp 1.2jt", "Gunung", R.drawable.img_onboarding1))
-        listWisata.add(Destinasi(2, "Pantai Kuta", "Bali", "Deskripsi...", "Rp 500rb", "Pantai", R.drawable.img_onboarding2))
-        listWisata.add(Destinasi(3, "Candi Borobudur", "Magelang", "Deskripsi...", "Rp 750rb", "Sejarah", R.drawable.img_onboarding3))
-        listWisata.add(Destinasi(4, "Nasi Goreng", "Bandung", "Deskripsi...", "Rp 50rb", "Kuliner", R.drawable.img_onboarding1))
+        listWisata.add(Destinasi(1, "Gunung Bromo", "Jawa Timur", "Sunrise terbaik.", "Rp 1.200.000", "Gunung", R.drawable.img_onboarding1))
+        listWisata.add(Destinasi(2, "Pantai Kuta", "Bali", "Pantai ikonik.", "Rp 500.000", "Pantai", R.drawable.img_onboarding2))
+        listWisata.add(Destinasi(3, "Candi Borobudur", "Magelang", "Candi terbesar.", "Rp 750.000", "Sejarah", R.drawable.img_onboarding3))
+        listWisata.add(Destinasi(4, "Pempek Palembang", "Palembang", "Kuliner khas.", "Rp 50.000", "Kuliner", R.drawable.img_onboarding1))
     }
 
     private fun showRecyclerView(data: ArrayList<Destinasi>) {
-        rvDestinasi.layoutManager = GridLayoutManager(this, 2)
+        // Menggunakan Vertical List (Gambar kiri, Teks kanan)
+        rvDestinasi.layoutManager = LinearLayoutManager(this)
         adapter = DestinasiAdapter(data)
         rvDestinasi.adapter = adapter
     }

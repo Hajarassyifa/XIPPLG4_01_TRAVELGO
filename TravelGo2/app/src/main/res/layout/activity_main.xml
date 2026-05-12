@@ -107,15 +107,18 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_bold"
                 android:text="Rekomendasi Destinasi"
+                android:textColor="@color/black"
                 android:textSize="16sp" />
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/tvLihatSemua"  android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Lihat Semua"
                 android:textColor="#808080" />
         </RelativeLayout>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvDestinasi"
             android:layout_width="match_parent"
