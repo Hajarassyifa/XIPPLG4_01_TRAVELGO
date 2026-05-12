@@ -1,45 +1,35 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Http\Controllers;
 
-return new class extends Migration
+use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+
+class AuthController extends Controller
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function register(Request $request)
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id('id_user');
-            $table->string('nama');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->timestamps();
-        });
+        $request->validate([
+            'nama' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6'
+        ]);
 
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
-        });
+        $user = User::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
 
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
-        });
+        return response()->json([
+            'status' => true,
+            'message' => 'Registrasi berhasil',
+            'data' => [
+                'id_user' => $user->id_user,
+                'nama' => $user->nama,
+                'email' => $user->email
+            ]
+        ], 201);
     }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('users');
-    }
-};
+}
