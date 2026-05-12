@@ -8,3 +8,4 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::apiResource('travel-packages', \App\Http\Controllers\TravelPackageController::class);
+Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
