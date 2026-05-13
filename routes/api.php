@@ -13,3 +13,5 @@ Route::apiResource('travel-packages', \App\Http\Controllers\TravelPackageControl
 Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
 
 Route::get('/destinasi', [DestinasiController::class, 'index']);
+
+Route::get('/destinasi/{id}', [\App\Http\Controllers\DestinasiController::class, 'show']);

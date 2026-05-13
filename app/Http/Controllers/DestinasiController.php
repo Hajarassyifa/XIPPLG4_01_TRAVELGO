@@ -16,4 +16,21 @@ class DestinasiController extends Controller
             'data'    => $data,
         ]);
     }
+    public function show($id)
+{
+    $destinasi = Destinasi::find($id);
+
+    if (!$destinasi) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Destinasi tidak ditemukan'
+        ], 404);
+    }
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Detail destinasi',
+        'data' => $destinasi
+    ]);
+}
 }
