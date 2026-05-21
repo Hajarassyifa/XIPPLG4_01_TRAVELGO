@@ -1,35 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-
-class AuthController extends Controller
+class CreateUsersTable extends Migration
 {
-    public function register(Request $request)
+    public function up()
     {
-        $request->validate([
-            'nama' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6'
-        ]);
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('role')->default('user');
+            $table->timestamps();
+        });
+    }
 
-        $user = User::create([
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-        ]);
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Registrasi berhasil',
-            'data' => [
-                'id_user' => $user->id_user,
-                'nama' => $user->nama,
-                'email' => $user->email
-            ]
-        ], 201);
+    public function down()
+    {
+        Schema::dropIfExists('users');
     }
 }
