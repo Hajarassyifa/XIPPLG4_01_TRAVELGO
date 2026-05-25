@@ -52,7 +52,6 @@ Route::get('/artikel/{id}', [ArtikelController::class, 'show']);
 Route::post('/artikel', [ArtikelController::class, 'store']);
 Route::put('/artikel/{id}', [ArtikelController::class, 'update']);
 Route::delete('/artikel/{id}', [ArtikelController::class, 'destroy']);
-
 // ======================
 // TRANSAKSI
 // ======================
