@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DestinasiController;
 use App\Http\Controllers\TravelPackageController;
+use App\Http\Controllers\TransaksiController;
 
 use App\Http\Controllers\Api\ArtikelController;
-use App\Http\Controllers\Api\TransaksiController;
 use App\Http\Controllers\Api\TravelController;
 
 // ======================
