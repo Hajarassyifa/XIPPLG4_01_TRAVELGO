@@ -15,7 +15,7 @@ class ReviewController extends Controller
      */
     public function index($packageId)
     {
-        $reviews = Review::with('user:id,name,photo')
+        $reviews = Review::with('user:id,nama,photo')
             ->where('travel_package_id', $packageId)
             ->latest()
             ->get()
@@ -27,7 +27,7 @@ class ReviewController extends Controller
                     'created_at' => $r->created_at,
                     'user' => [
                         'id'        => $r->user->id,
-                        'name'      => $r->user->name,
+                        'nama'      => $r->user->nama,
                         'photo_url' => $r->user->photo
                             ? \Storage::url($r->user->photo)
                             : null,
