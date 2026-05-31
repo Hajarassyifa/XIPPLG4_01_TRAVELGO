@@ -1,25 +1,53 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Http\Controllers;
 
-return new class extends Migration
+use App\Models\Destinasi;
+
+class DestinasiController extends Controller
 {
-    public function up()
+    public function index()
     {
-        Schema::create('destinasi', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama_destinasi');
-            $table->string('lokasi');
-            $table->text('deskripsi')->nullable();
-            $table->integer('harga_tiket');
-            $table->timestamps();
+        $data = Destinasi::all()->map(function ($item) {
+            return $this->format($item);
         });
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'List Destinasi',
+            'data'    => $data,
+        ]);
     }
 
-    public function down()
+    public function show($id)
     {
-        Schema::dropIfExists('destinasi');
+        $destinasi = Destinasi::find($id);
+
+        if (!$destinasi) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Destinasi tidak ditemukan'
+            ], 404);
+        }
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Detail destinasi',
+            'data'    => $this->format($destinasi)
+        ]);
     }
-};
+
+    private function format($item)
+    {
+        return [
+            'id'          => $item->id,
+            'name'        => $item->nama_destinasi,
+            'location'    => $item->lokasi,
+            'description' => $item->deskripsi,
+            'price'       => (float) $item->harga_tiket,
+            'image'       => $item->image ?? null,
+            'open_time'   => $item->open_time ?? null,
+            'close_time'  => $item->close_time ?? null,
+        ];
+    }
+}
