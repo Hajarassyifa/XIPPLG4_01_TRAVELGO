@@ -1,53 +1,34 @@
 <?php
 
-namespace App\Http\Controllers;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use App\Models\Destinasi;
-
-class DestinasiController extends Controller
+return new class extends Migration
 {
-    public function index()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
-        $data = Destinasi::all()->map(function ($item) {
-            return $this->format($item);
+        Schema::create('destinasi', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_destinasi');
+            $table->string('lokasi');
+            $table->text('deskripsi')->nullable();
+            $table->decimal('harga_tiket', 10, 2); // Supaya cocok saat di-convert ke (float) di controller kamu
+            $table->string('image')->nullable();
+            $table->string('open_time')->nullable();
+            $table->string('close_time')->nullable();
+            $table->timestamps();
         });
-
-        return response()->json([
-            'status'  => true,
-            'message' => 'List Destinasi',
-            'data'    => $data,
-        ]);
     }
 
-    public function show($id)
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
-        $destinasi = Destinasi::find($id);
-
-        if (!$destinasi) {
-            return response()->json([
-                'status'  => false,
-                'message' => 'Destinasi tidak ditemukan'
-            ], 404);
-        }
-
-        return response()->json([
-            'status'  => true,
-            'message' => 'Detail destinasi',
-            'data'    => $this->format($destinasi)
-        ]);
+        Schema::dropIfExists('destinasi');
     }
-
-    private function format($item)
-    {
-        return [
-            'id'          => $item->id,
-            'name'        => $item->nama_destinasi,
-            'location'    => $item->lokasi,
-            'description' => $item->deskripsi,
-            'price'       => (float) $item->harga_tiket,
-            'image'       => $item->image ?? null,
-            'open_time'   => $item->open_time ?? null,
-            'close_time'  => $item->close_time ?? null,
-        ];
-    }
-}
+};
