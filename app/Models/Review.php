@@ -9,7 +9,7 @@ class Review extends Model
 {
     protected $fillable = [
         'user_id',
-        'travel_package_id',
+        'travel_package_id', 
         'transaksi_id',
         'rating',
         'comment',
@@ -26,7 +26,8 @@ class Review extends Model
 
     public function travelPackage(): BelongsTo
     {
-        return $this->belongsTo(TravelPackage::class);
+        // Menghubungkan foreign key 'travel_package_id' ke model TravelPackage (tabel destinasi)
+        return $this->belongsTo(TravelPackage::class, 'travel_package_id');
     }
 
     public function transaksi(): BelongsTo
