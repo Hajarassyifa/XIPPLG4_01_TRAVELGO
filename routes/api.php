@@ -32,6 +32,7 @@ Route::get('/packages/{packageId}/reviews', [ReviewController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::put('/change-password', [ProfileController::class, 'changePassword']);
 
     Route::get('/user', function (Request $request) {
         return $request->user();
